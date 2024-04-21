@@ -18,6 +18,9 @@ version = properties("pluginVersion").get()
 
 // Configure project's dependencies
 repositories {
+    maven("https://maven.aliyun.com/repository/central")
+    maven("https://maven.aliyun.com/repository/public")
+    maven("https://maven.aliyun.com/repository/gradle-plugin")
     mavenCentral()
 }
 
