@@ -1,22 +1,24 @@
 package com.github.xjw580.quickfxml.inspection
 
+import com.github.xjw580.javafx_fast.interfaces.Root
 import com.github.xjw580.quickfxml.data.FxmlData
 import com.github.xjw580.quickfxml.enums.JavaFXClassNameEnum
 import com.intellij.codeInspection.LocalInspectionToolSession
 import com.intellij.codeInspection.ProblemsHolder
+import com.intellij.ide.highlighter.XmlFileType
 import com.intellij.openapi.command.WriteCommandAction
-import com.intellij.psi.JavaPsiFacade
-import com.intellij.psi.PsiClass
-import com.intellij.psi.XmlElementVisitor
-import com.intellij.psi.XmlRecursiveElementVisitor
+import com.intellij.psi.*
 import com.intellij.psi.codeStyle.CodeStyleManager
 import com.intellij.psi.impl.source.PsiClassImpl
 import com.intellij.psi.impl.source.PsiJavaFileImpl
+import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.xml.XmlFile
 import com.intellij.psi.xml.XmlProlog
 import com.intellij.psi.xml.XmlTag
 import com.intellij.util.containers.stream
+import com.intellij.util.xml.DomManager
+import com.intellij.util.xml.DomService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,8 +38,29 @@ class FxmlInspection: XmlInspectionBase() {
 
         override fun visitXmlFile(file: XmlFile) {
             super.visitXmlFile(file)
+            println("name:" + file.name)
+
             currentFxml?.let { fxml ->
+
                 val project = file.project
+
+                if (file.name.endsWith("test.xml")){
+//                    var fileElements = DomService.getInstance()
+//                        .getFileElements(Root::class.java, project, GlobalSearchScope.allScope(project))
+//                    var iterator = fileElements.iterator()
+//                    while (iterator.hasNext()){
+//                        println(iterator.next())
+//                    }
+                    println("===========================================1")
+                    val manager = DomManager.getDomManager(project)
+                    val root = manager.getFileElement(file, Root::class.java)?.rootElement
+                    println(root)
+                    println("===========================================2")
+                }
+                if (true){
+                    return
+                }
+
                 val controllerClass = JavaPsiFacade.getInstance(project).findClass(fxml.controllerFullName, GlobalSearchScope.projectScope(project))
                 controllerClass?.let {
                     controllerClass as PsiClassImpl

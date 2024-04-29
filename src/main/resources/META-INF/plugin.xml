@@ -11,16 +11,28 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <localInspection
-                language="XML"
-                groupPath="Xml"
-                groupKey="inspection.quickfxml.group.name"
-                groupBundle="messages.MyBundle"
-                shortName="fxml"
-                enabledByDefault="true"
-                implementationClass="com.github.xjw580.quickfxml.inspection.FxmlInspection"
-                key="inspection.quickfxml.display.name"
-                bundle="messages.MyBundle"/>
+        <dom.fileMetaData rootTagName="root" implementation="com.github.xjw580.quickfxml.description.XMLDescription"/>
+        <codeInsight.lineMarkerProvider id="ControllerLineMarker" language="XML"
+                                        implementationClass="com.github.xjw580.quickfxml.marker.ControllerLineMarker"/>
+<!--        <localInspection-->
+<!--                language="XML"-->
+<!--                groupPath="Xml"-->
+<!--                groupKey="inspection.quickfxml.group.name"-->
+<!--                groupBundle="messages.MyBundle"-->
+<!--                shortName="xml"-->
+<!--                enabledByDefault="true"-->
+<!--                implementationClass="com.github.xjw580.quickfxml.inspection.FxmlInspection"-->
+<!--                key="inspection.quickfxml.display.name"-->
+<!--                bundle="messages.MyBundle"/>-->
     </extensions>
 
+    <actions>
+        <action
+                id="GeneratedXMLCode"
+                class="com.github.xjw580.quickfxml.action.GeneratedXMLCode"
+                text="GenerateGroup"
+                description="SDK action example">
+            <add-to-group group-id="GenerateGroup" anchor="first"/>
+        </action>
+    </actions>
 </idea-plugin>
