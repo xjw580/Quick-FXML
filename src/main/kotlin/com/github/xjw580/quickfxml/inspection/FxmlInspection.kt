@@ -39,27 +39,26 @@ class FxmlInspection: XmlInspectionBase() {
         override fun visitXmlFile(file: XmlFile) {
             super.visitXmlFile(file)
             println("name:" + file.name)
-
             currentFxml?.let { fxml ->
 
                 val project = file.project
 
-                if (file.name.endsWith("test.xml")){
-//                    var fileElements = DomService.getInstance()
-//                        .getFileElements(Root::class.java, project, GlobalSearchScope.allScope(project))
-//                    var iterator = fileElements.iterator()
-//                    while (iterator.hasNext()){
-//                        println(iterator.next())
-//                    }
-                    println("===========================================1")
-                    val manager = DomManager.getDomManager(project)
-                    val root = manager.getFileElement(file, Root::class.java)?.rootElement
-                    println(root)
-                    println("===========================================2")
-                }
-                if (true){
-                    return
-                }
+//                if (file.name.endsWith("test.xml")){
+////                    var fileElements = DomService.getInstance()
+////                        .getFileElements(Root::class.java, project, GlobalSearchScope.allScope(project))
+////                    var iterator = fileElements.iterator()
+////                    while (iterator.hasNext()){
+////                        println(iterator.next())
+////                    }
+//                    println("===========================================1")
+//                    val manager = DomManager.getDomManager(project)
+//                    val root = manager.getFileElement(file, Root::class.java)?.rootElement
+//                    println(root)
+//                    println("===========================================2")
+//                }
+//                if (true){
+//                    return
+//                }
 
                 val controllerClass = JavaPsiFacade.getInstance(project).findClass(fxml.controllerFullName, GlobalSearchScope.projectScope(project))
                 controllerClass?.let {
@@ -128,13 +127,17 @@ class FxmlInspection: XmlInspectionBase() {
 
         override fun visitXmlTag(tag: XmlTag) {
             super.visitXmlTag(tag)
-            val attributes = tag.attributes
             currentFxml?.let {
-                for (attribute in attributes) {
-                    if (attribute.name == "fx:controller"){
-                        it.controllerFullName = attribute.value.toString()
-                    }else if (attribute.name == "fx:id"){
-                        it.fieldSet.add(FxmlData.FxmlFieldData(attribute.value.toString(), tag.name))
+                val id = tag.getAttribute("fx:id")
+                val controller = tag.getAttribute("fx:controller")
+                id?.let { idIt ->
+                    idIt.value?.let { idValue ->
+                        it.fieldSet.add(FxmlData.FxmlFieldData(idValue, tag.name))
+                    }
+                }
+                controller?.let { controllerIt ->
+                    controllerIt.value?.let { controllerValue ->
+                        it.controllerFullName = controllerValue
                     }
                 }
             }
@@ -142,14 +145,16 @@ class FxmlInspection: XmlInspectionBase() {
 
         override fun visitXmlProlog(prolog: XmlProlog) {
             super.visitXmlProlog(prolog)
-            currentFxml = FxmlData()
-            val headLine = prolog.text.split("\n")
-            val regex = "^<\\?import\\s+([\\w.*]+)\\?>$".toRegex()
-            for (line in headLine) {
-                val matchResult = regex.find(line)
-                val importPackage = matchResult?.groupValues?.get(1)
-                if (importPackage != null && !importPackage.contains("java.lang") && !importPackage.contains("java.util")){
-                    currentFxml?.importPackageSet?.add(importPackage)
+            if ((prolog.parent.parent as XmlFile).name.endsWith(".fxml")){
+                currentFxml = FxmlData()
+                val headLine = prolog.text.split("\n")
+                val regex = "^<\\?import\\s+([\\w.*]+)\\?>$".toRegex()
+                for (line in headLine) {
+                    val matchResult = regex.find(line)
+                    val importPackage = matchResult?.groupValues?.get(1)
+                    if (importPackage != null && !importPackage.contains("java.lang") && !importPackage.contains("java.util")){
+                        currentFxml?.importPackageSet?.add(importPackage)
+                    }
                 }
             }
         }

@@ -5,7 +5,6 @@ import com.github.xjw580.quickfxml.listener.XmlAttributeChangeListener
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.LangDataKeys
-import com.intellij.openapi.vcs.update.ScopeInfo.FILES
 import com.intellij.psi.PsiManager
 import com.intellij.psi.xml.XmlFile
 import com.intellij.util.xml.DomManager

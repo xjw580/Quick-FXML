@@ -16,6 +16,6 @@ interface Foo: DomElement {
     fun getName(): GenericAttributeValue<String?>?
     @SubTagList("bar")
     fun getBars(): List<Bar?>?
-    fun addBar(): Bar?
+//    fun addBar(): Bar?
 
 }
