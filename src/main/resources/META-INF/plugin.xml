@@ -8,11 +8,24 @@
           Quick FXML 插件
           适用于JavaFX项目
           特性:
-       <ul>
-          <li>在编写fxml文件中，将会获取fxml文件中的fx:id属性然后在对应的controller中插入对应的成员变量</li>
-      </ul>
+            <ul>
+              <li>在编写fxml文件中，将会获取fxml文件中的fx:id属性然后在对应的controller中插入对应的成员变量</li>
+              <li>在编写fxml文件中，将会获取fxml文件中的on开头的属性然后在对应的controller中插入对应的方法</li>
+            </ul>
       ]]>
     </description>
+
+    <change-notes><![CDATA[
+      <h4>1.0.2</h4>
+      <ul>
+          <li>实现由XmlSuppressableInspectionTool换成PsiTreeChangeListener，降低CPU占用</li>
+      </ul>
+       <h4>1.0.1</h4>
+      <ul>
+          <li>优化效率</li>
+      </ul>
+      ]]>
+    </change-notes>
 
     <depends>com.intellij.modules.java</depends>
     <depends>com.intellij.modules.lang</depends>
@@ -20,29 +33,9 @@
 
     <resource-bundle>messages.MyBundle</resource-bundle>
 
-    <extensions defaultExtensionNs="com.intellij">
-<!--        <dom.fileMetaData rootTagName="root" implementation="com.github.xjw580.quickfxml.description.XMLDescription"/>-->
-<!--        <codeInsight.lineMarkerProvider id="ControllerLineMarker" language="XML"-->
-<!--                                        implementationClass="com.github.xjw580.quickfxml.marker.ControllerLineMarker"/>-->
-        <localInspection
-                language="XML"
-                groupPath="Xml"
-                groupKey="inspection.quickfxml.group.name"
-                groupBundle="messages.MyBundle"
-                shortName="xml"
-                enabledByDefault="true"
-                implementationClass="com.github.xjw580.quickfxml.inspection.FxmlInspection"
-                key="inspection.quickfxml.display.name"
-                bundle="messages.MyBundle"/>
-    </extensions>
-
-<!--    <actions>-->
-<!--        <action-->
-<!--                id="GeneratedXMLCode"-->
-<!--                class="com.github.xjw580.quickfxml.action.GeneratedXMLCode"-->
-<!--                text="GenerateGroup"-->
-<!--                description="SDK action example">-->
-<!--            <add-to-group group-id="GenerateGroup" anchor="first"/>-->
-<!--        </action>-->
-<!--    </actions>-->
+    <projectListeners>
+        <listener
+                class="com.github.xjw580.quickfxml.listener.MyToolWindowManagerListener"
+                topic="com.intellij.openapi.wm.ex.ToolWindowManagerListener"/>
+    </projectListeners>
 </idea-plugin>
